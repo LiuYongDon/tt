@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var ext = (function(){
+			var num = 0;
+			return function(){
+				return num++;
+			}
+		}())
+
+
+		
+		var scope = "global scope";
+		function checkscope(){
+			var scope = "local scope";
+			function f(){
+				return scope;
+			}
+			return f;
+		}
+		var res = checkscope()();
+		document.write(res);
+
+		var a = true;
+
+		a = a || 2;
+
+		function aa(){
+			document.write(arguments[1]);
+		}
+		aa(1,2,3,45)
+
+		/*
+			arguments 是代表形参
+			例：求最大值 
+			注释：Number.NEGATIVE_INFINITY 负无穷大
+		*/
+		function max(){
+			var max = Number.NEGATIVE_INFINITY;
+			for(var i = 0; i < arguments.length; i++){
+				if(arguments[i] > max){
+				 	max = arguments[i]
+				 	// console.log(max);
+				 }
+			}
+			return max;
+		}
+		document.write('<hr>');
+		document.write(max(23,45,6,7777,2));
+
+		/*
+			arguments.callee()  指当前这个函数
+			递归调用自身例子 
+			求x的阶乘 及x x-1 x-2 x-3 ... 1  
+		*/
+		var ac = function(x){
+			if(x <= 1){
+				return 1;
+			}
+			var a =  x * arguments.callee(x-1);   // == x * ac(x-1)
+			console.log(a);
+			return a;
+		}
+		document.write('<hr>');
+		document.write(ac(5)); //5*4*3*2*1
+
+		/*
+			使用自身属性  没错把结果存到自身属性中
+		*/
+		dd.c = 0;
+		function dd(){
+			return dd.c++;
+		}
+		document.write('<hr>');
+		document.write(dd());
+
+		/*
+			使用闭包写
+		*/
+		var dd = (function(){
+			var c = 0;
+			return function(){ return c++; }
+		}())
+
+		/*
+			函数对象的 call() 方法 和 apply() 方法
+			call(thisObj，Object)
+		*/
+		
+		function Set(){
+			this.values = {};
+			this.n =0;
+			this.add.apply(this,arguments);
+		}
+
+		Set.prototype.add = function(){
+			for(var i = 0; i < arguments.length; i++){
+				var val = arguments[i];
+				var str = Set._v2s(val);
+				if(!this.values.hasOwnProperty(str)){
+					this.values[str] = val;
+					this.n++;
+				}
+			}
+		}
+		//从集合删除元素，这些元素由参数指定
+		Set.prototype.remove = function(){
+			for(var i =0; i< arguments.length; i++){
+				var str = Set._v2s(arguments[i]);
+				if(this.values.hasOwnProperty(str)){
+					delete this.values[str];
+					this.n--;
+				}
+			}
+			return this;
+		}
+
+
+	</script>
+</body>
+</html>
